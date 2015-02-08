@@ -1,0 +1,15 @@
+package tai64n;
+
+import "code.google.com/p/gogoprotobuf/gogoproto/gogo.proto";
+
+option (gogoproto.marshaler_all) = true;
+option (gogoproto.sizer_all) = true;
+option (gogoproto.unmarshaler_all) = true;
+option (gogoproto.equal_all) = true;
+option (gogoproto.verbose_equal_all) = true;
+
+message TAI64n {
+  required uint64 seconds = 1 [(gogoproto.nullable) = false, (gogoproto.moretags) = "codec:\"seconds\""];
+  required uint32 nanoseconds = 2 [(gogoproto.nullable) = false, (gogoproto.moretags) = "codec:\"nanoseconds\""];
+}
+
