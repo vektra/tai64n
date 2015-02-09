@@ -13,16 +13,15 @@
 */
 package tai64n
 
-import proto "code.google.com/p/gogoprotobuf/proto"
+import proto "github.com/gogo/protobuf/proto"
 import math "math"
 
-// discarding unused import gogoproto "code.google.com/p/gogoprotobuf/gogoproto/gogo.pb"
+// discarding unused import gogoproto "github.com/gogo/protobuf/gogoproto/gogo.pb"
 
 import io "io"
 import fmt "fmt"
-import code_google_com_p_gogoprotobuf_proto "code.google.com/p/gogoprotobuf/proto"
+import github_com_gogo_protobuf_proto "github.com/gogo/protobuf/proto"
 
-import fmt1 "fmt"
 import bytes "bytes"
 
 // Reference imports to suppress errors if they are not otherwise used.
@@ -35,9 +34,8 @@ type TAI64N struct {
 	XXX_unrecognized []byte `json:"-" codec:"-"`
 }
 
-func (m *TAI64N) Reset()         { *m = TAI64N{} }
-func (m *TAI64N) String() string { return proto.CompactTextString(m) }
-func (*TAI64N) ProtoMessage()    {}
+func (m *TAI64N) Reset()      { *m = TAI64N{} }
+func (*TAI64N) ProtoMessage() {}
 
 func (m *TAI64N) GetSeconds() uint64 {
 	if m != nil {
@@ -114,7 +112,7 @@ func (m *TAI64N) Unmarshal(data []byte) error {
 				}
 			}
 			index -= sizeOfWire
-			skippy, err := code_google_com_p_gogoprotobuf_proto.Skip(data[index:])
+			skippy, err := github_com_gogo_protobuf_proto.Skip(data[index:])
 			if err != nil {
 				return err
 			}
@@ -177,6 +175,7 @@ func (m *TAI64N) MarshalTo(data []byte) (n int, err error) {
 	}
 	return i, nil
 }
+
 func encodeFixed64Tai64N(data []byte, offset int, v uint64) int {
 	data[offset] = uint8(v)
 	data[offset+1] = uint8(v >> 8)
@@ -209,29 +208,29 @@ func (this *TAI64N) VerboseEqual(that interface{}) error {
 		if this == nil {
 			return nil
 		}
-		return fmt1.Errorf("that == nil && this != nil")
+		return fmt.Errorf("that == nil && this != nil")
 	}
 
 	that1, ok := that.(*TAI64N)
 	if !ok {
-		return fmt1.Errorf("that is not of type *TAI64N")
+		return fmt.Errorf("that is not of type *TAI64N")
 	}
 	if that1 == nil {
 		if this == nil {
 			return nil
 		}
-		return fmt1.Errorf("that is type *TAI64N but is nil && this != nil")
+		return fmt.Errorf("that is type *TAI64N but is nil && this != nil")
 	} else if this == nil {
-		return fmt1.Errorf("that is type *TAI64Nbut is not nil && this == nil")
+		return fmt.Errorf("that is type *TAI64Nbut is not nil && this == nil")
 	}
 	if this.Seconds != that1.Seconds {
-		return fmt1.Errorf("Seconds this(%v) Not Equal that(%v)", this.Seconds, that1.Seconds)
+		return fmt.Errorf("Seconds this(%v) Not Equal that(%v)", this.Seconds, that1.Seconds)
 	}
 	if this.Nanoseconds != that1.Nanoseconds {
-		return fmt1.Errorf("Nanoseconds this(%v) Not Equal that(%v)", this.Nanoseconds, that1.Nanoseconds)
+		return fmt.Errorf("Nanoseconds this(%v) Not Equal that(%v)", this.Nanoseconds, that1.Nanoseconds)
 	}
 	if !bytes.Equal(this.XXX_unrecognized, that1.XXX_unrecognized) {
-		return fmt1.Errorf("XXX_unrecognized this(%v) Not Equal that(%v)", this.XXX_unrecognized, that1.XXX_unrecognized)
+		return fmt.Errorf("XXX_unrecognized this(%v) Not Equal that(%v)", this.XXX_unrecognized, that1.XXX_unrecognized)
 	}
 	return nil
 }

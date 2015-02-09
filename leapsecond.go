@@ -37,6 +37,22 @@ var AllLeapSeconds = []*LeapSecond{
 	&LeapSecond{time.Date(2015, time.July, 1, 0, 0, 0, 0, time.UTC), 36},
 }
 
+type LeapMoment struct {
+	LeapSecond *LeapSecond
+	Moment     *TAI64N
+}
+
+var AllLeapMoments []*LeapMoment
+
+func init() {
+	for _, ls := range AllLeapSeconds {
+		moment := FromTime(ls.Threshold)
+		moment.Seconds--
+
+		AllLeapMoments = append(AllLeapMoments, &LeapMoment{ls, moment})
+	}
+}
+
 func LeapSecondsInvolved(t time.Time) int {
 	// performance bias: typically times will be in the recent history,
 	// because, well, computers. So check from most recent leap second
@@ -50,4 +66,16 @@ func LeapSecondsInvolved(t time.Time) int {
 	}
 
 	return 0
+}
+
+func nearestLeapMoment(t *TAI64N) *LeapMoment {
+	for i := len(AllLeapMoments) - 1; i >= 0; i-- {
+		lm := AllLeapMoments[i]
+
+		if t.Equal(lm.Moment) || t.After(lm.Moment) {
+			return lm
+		}
+	}
+
+	return nil
 }

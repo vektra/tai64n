@@ -107,3 +107,57 @@ func TestAdd(t *testing.T) {
 
 	assert.Equal(t, m1.Seconds+1, m2.Seconds)
 }
+
+func TestDate(t *testing.T) {
+	s := time.Date(2014, time.May, 1, 2, 3, 4, 5, time.UTC)
+	n := FromTime(s)
+
+	y1, m1, d1 := n.Date()
+	y2, m2, d2 := s.Date()
+
+	assert.Equal(t, y1, y2)
+	assert.Equal(t, m1, m2)
+	assert.Equal(t, d1, d2)
+}
+
+func TestDateAtLeap(t *testing.T) {
+	s := time.Date(2012, time.July, 1, 0, 0, 0, 0, time.UTC)
+	n := FromTime(s)
+	n.Seconds--
+
+	y1, m1, d1 := n.Date()
+
+	assert.Equal(t, y1, 2012)
+	assert.Equal(t, m1, time.June)
+	assert.Equal(t, d1, 30)
+}
+
+func TestClock(t *testing.T) {
+	s := time.Date(2014, time.May, 1, 2, 3, 4, 5, time.UTC)
+	n := FromTime(s)
+
+	h1, m1, s1 := n.Clock()
+	h2, m2, s2 := s.Clock()
+
+	assert.Equal(t, h1, h2)
+	assert.Equal(t, m1, m2)
+	assert.Equal(t, s1, s2)
+}
+
+func TestClockAtLeap(t *testing.T) {
+	s := time.Date(2012, time.July, 1, 0, 0, 0, 0, time.UTC)
+	n := FromTime(s)
+	n.Seconds--
+
+	h1, m1, s1 := n.Clock()
+
+	assert.Equal(t, h1, 23)
+	assert.Equal(t, m1, 59)
+	assert.Equal(t, s1, 60)
+}
+
+func TestString(t *testing.T) {
+	n := Now()
+
+	assert.Equal(t, n.String(), n.Time().Format(time.RFC3339Nano))
+}
