@@ -2,6 +2,7 @@ package tai64n
 
 import "time"
 
+// Represents the first moment after a leap second occurs.
 type LeapSecond struct {
 	Threshold time.Time
 	Offset    int
@@ -53,6 +54,8 @@ func init() {
 	}
 }
 
+// Return the number of leap seconds that occur previous to the given
+// time.
 func LeapSecondsInvolved(t time.Time) int {
 	// performance bias: typically times will be in the recent history,
 	// because, well, computers. So check from most recent leap second
