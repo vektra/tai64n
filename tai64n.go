@@ -145,5 +145,20 @@ func (tai *TAI64N) Compare(other *TAI64N) TimeComparison {
 }
 
 func (tai *TAI64N) Add(dur time.Duration) *TAI64N {
-	return FromTime(tai.Time().Add(dur))
+	var (
+		secs  = uint64(dur / time.Second)
+		nsecs = uint32(dur % time.Second)
+	)
+
+	val := &TAI64N{
+		Seconds:     tai.Seconds + secs,
+		Nanoseconds: tai.Nanoseconds + nsecs,
+	}
+
+	if val.Nanoseconds > uint32(time.Second) {
+		val.Seconds++
+		val.Nanoseconds -= uint32(time.Second)
+	}
+
+	return val
 }
