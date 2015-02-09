@@ -10,17 +10,27 @@ import (
 const TAI64OriginalBase = 4611686018427387904
 
 var (
-	nextLS       = time.Date(2015, time.July, 1, 0, 0, 0, time.UTC)
+	nextLS       = time.Date(2015, time.July, 1, 0, 0, 0, 0, time.UTC)
 	nextLSOffset = 36
+	curLS        = time.Date(2012, time.July, 1, 0, 0, 0, 0, time.UTC)
 	curLSOffset  = 35
 )
 
 func nowBase(now time.Time) int64 {
-	if now.After(nextLS) {
-		return TAI64OriginalBase + nextLSOffset
-	}
+	sec := now.Unix()
 
-	return TAI64OriginalBase + curLSOffset
+	// perf bias: most users set their server time to the current
+	// time on earth, so we bias this to check that we're in that
+	// time region before checking the complete leap second table.
+
+	switch {
+	case sec >= nextLS.Unix():
+		return int64(TAI64OriginalBase + nextLSOffset)
+	case sec >= curLS.Unix():
+		return int64(TAI64OriginalBase + curLSOffset)
+	default:
+		return int64(TAI64OriginalBase + LeapSecondsInvolved(now))
+	}
 }
 
 type TimeComparison int
@@ -32,22 +42,25 @@ const (
 )
 
 func Now() *TAI64N {
-	return FromTime(time.Now())
-}
+	t := time.Now()
 
-func FromTime(t time.Time) *TAI64N {
 	return &TAI64N{
 		Seconds:     uint64(t.Unix() + nowBase(t)),
 		Nanoseconds: uint32(t.Nanosecond()),
 	}
 }
 
+func FromTime(t time.Time) *TAI64N {
+	return &TAI64N{
+		Seconds:     uint64(t.Unix() + int64(TAI64OriginalBase+LeapSecondsInvolved(t))),
+		Nanoseconds: uint32(t.Nanosecond()),
+	}
+}
+
 func (tai *TAI64N) Time() time.Time {
-	t := time.Unix(int64(tai.Seconds-TAI64OriginalBase), int64(tai.Nanoseconds))
+	t := time.Unix(int64(tai.Seconds-TAI64OriginalBase), int64(tai.Nanoseconds)).UTC()
 
-	t.Add(LeapSecondsInvolved(t) * time.Second)
-
-	return t
+	return t.Add(-time.Duration(LeapSecondsInvolved(t)) * time.Second)
 }
 
 func (tai *TAI64N) WriteStorage(buf []byte) {
@@ -95,25 +108,20 @@ func (tai TAI64N) MarshalJSON() ([]byte, error) {
 }
 
 func (tai *TAI64N) UnmarshalJSON(data []byte) (err error) {
-	t := new(time.Time)
+	var t time.Time
 	err = t.UnmarshalJSON(data)
 
-	*tai = TAI64N{
-		Seconds:     uint64(t.Unix() + TAI64Base + LeapSecondsInvolved(t)),
-		Nanoseconds: uint32(t.Nanosecond()),
-	}
+	*tai = *FromTime(t)
 
 	return err
 }
 
 func (tai *TAI64N) Before(other *TAI64N) bool {
-	return tai.GetSeconds() < other.GetSeconds() ||
-		(tai.GetSeconds() == other.GetSeconds() &&
-			tai.GetNanoseconds() < other.GetNanoseconds())
+	return tai.Compare(other) == Before
 }
 
 func (tai *TAI64N) After(other *TAI64N) bool {
-	return other.Before(tai)
+	return tai.Compare(other) == After
 }
 
 func (tai *TAI64N) Compare(other *TAI64N) TimeComparison {
