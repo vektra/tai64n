@@ -13,14 +13,14 @@
 */
 package tai64n
 
-import proto "github.com/gogo/protobuf/proto"
+import proto "github.com/golang/protobuf/proto"
 import math "math"
 
 // discarding unused import gogoproto "github.com/gogo/protobuf/gogoproto/gogo.pb"
 
 import io "io"
 import fmt "fmt"
-import github_com_gogo_protobuf_proto "github.com/gogo/protobuf/proto"
+import github_com_golang_protobuf_proto "github.com/golang/protobuf/proto"
 
 import bytes "bytes"
 
@@ -31,7 +31,7 @@ var _ = math.Inf
 type TAI64N struct {
 	Seconds          uint64 `protobuf:"varint,1,req,name=seconds" json:"seconds" codec:"seconds"`
 	Nanoseconds      uint32 `protobuf:"varint,2,req,name=nanoseconds" json:"nanoseconds" codec:"nanoseconds"`
-	XXX_unrecognized []byte `json:"-" codec:"-"`
+	XXX_unrecognized []byte `json:"-"`
 }
 
 func (m *TAI64N) Reset()      { *m = TAI64N{} }
@@ -54,6 +54,7 @@ func (m *TAI64N) GetNanoseconds() uint32 {
 func init() {
 }
 func (m *TAI64N) Unmarshal(data []byte) error {
+	var hasFields [1]uint64
 	l := len(data)
 	index := 0
 	for index < l {
@@ -87,6 +88,7 @@ func (m *TAI64N) Unmarshal(data []byte) error {
 					break
 				}
 			}
+			hasFields[0] |= uint64(0x00000001)
 		case 2:
 			if wireType != 0 {
 				return fmt.Errorf("proto: wrong wireType = %d for field Nanoseconds", wireType)
@@ -102,6 +104,7 @@ func (m *TAI64N) Unmarshal(data []byte) error {
 					break
 				}
 			}
+			hasFields[0] |= uint64(0x00000002)
 		default:
 			var sizeOfWire int
 			for {
@@ -112,7 +115,7 @@ func (m *TAI64N) Unmarshal(data []byte) error {
 				}
 			}
 			index -= sizeOfWire
-			skippy, err := github_com_gogo_protobuf_proto.Skip(data[index:])
+			skippy, err := skipTai64N(data[index:])
 			if err != nil {
 				return err
 			}
@@ -123,7 +126,98 @@ func (m *TAI64N) Unmarshal(data []byte) error {
 			index += skippy
 		}
 	}
+	if hasFields[0]&uint64(0x00000001) == 0 {
+		return github_com_golang_protobuf_proto.NewRequiredNotSetError("seconds")
+	}
+	if hasFields[0]&uint64(0x00000002) == 0 {
+		return github_com_golang_protobuf_proto.NewRequiredNotSetError("nanoseconds")
+	}
+
 	return nil
+}
+func skipTai64N(data []byte) (n int, err error) {
+	l := len(data)
+	index := 0
+	for index < l {
+		var wire uint64
+		for shift := uint(0); ; shift += 7 {
+			if index >= l {
+				return 0, io.ErrUnexpectedEOF
+			}
+			b := data[index]
+			index++
+			wire |= (uint64(b) & 0x7F) << shift
+			if b < 0x80 {
+				break
+			}
+		}
+		wireType := int(wire & 0x7)
+		switch wireType {
+		case 0:
+			for {
+				if index >= l {
+					return 0, io.ErrUnexpectedEOF
+				}
+				index++
+				if data[index-1] < 0x80 {
+					break
+				}
+			}
+			return index, nil
+		case 1:
+			index += 8
+			return index, nil
+		case 2:
+			var length int
+			for shift := uint(0); ; shift += 7 {
+				if index >= l {
+					return 0, io.ErrUnexpectedEOF
+				}
+				b := data[index]
+				index++
+				length |= (int(b) & 0x7F) << shift
+				if b < 0x80 {
+					break
+				}
+			}
+			index += length
+			return index, nil
+		case 3:
+			for {
+				var wire uint64
+				var start int = index
+				for shift := uint(0); ; shift += 7 {
+					if index >= l {
+						return 0, io.ErrUnexpectedEOF
+					}
+					b := data[index]
+					index++
+					wire |= (uint64(b) & 0x7F) << shift
+					if b < 0x80 {
+						break
+					}
+				}
+				wireType := int(wire & 0x7)
+				if wireType == 4 {
+					break
+				}
+				next, err := skipTai64N(data[start:])
+				if err != nil {
+					return 0, err
+				}
+				index = start + next
+			}
+			return index, nil
+		case 4:
+			return index, nil
+		case 5:
+			index += 4
+			return index, nil
+		default:
+			return 0, fmt.Errorf("proto: illegal wireType %d", wireType)
+		}
+	}
+	panic("unreachable")
 }
 func (m *TAI64N) Size() (n int) {
 	var l int
