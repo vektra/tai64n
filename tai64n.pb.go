@@ -13,14 +13,14 @@
 */
 package tai64n
 
-import proto "github.com/golang/protobuf/proto"
+import proto "github.com/gogo/protobuf/proto"
 import math "math"
 
 // discarding unused import gogoproto "github.com/gogo/protobuf/gogoproto/gogo.pb"
 
 import io "io"
 import fmt "fmt"
-import github_com_golang_protobuf_proto "github.com/golang/protobuf/proto"
+import github_com_gogo_protobuf_proto "github.com/gogo/protobuf/proto"
 
 import bytes "bytes"
 
@@ -31,7 +31,7 @@ var _ = math.Inf
 type TAI64N struct {
 	Seconds          uint64 `protobuf:"varint,1,req,name=seconds" json:"seconds" codec:"seconds"`
 	Nanoseconds      uint32 `protobuf:"varint,2,req,name=nanoseconds" json:"nanoseconds" codec:"nanoseconds"`
-	XXX_unrecognized []byte `json:"-"`
+	XXX_unrecognized []byte `json:"-" codec:"-"`
 }
 
 func (m *TAI64N) Reset()      { *m = TAI64N{} }
@@ -127,10 +127,10 @@ func (m *TAI64N) Unmarshal(data []byte) error {
 		}
 	}
 	if hasFields[0]&uint64(0x00000001) == 0 {
-		return github_com_golang_protobuf_proto.NewRequiredNotSetError("seconds")
+		return github_com_gogo_protobuf_proto.NewRequiredNotSetError("seconds")
 	}
 	if hasFields[0]&uint64(0x00000002) == 0 {
-		return github_com_golang_protobuf_proto.NewRequiredNotSetError("nanoseconds")
+		return github_com_gogo_protobuf_proto.NewRequiredNotSetError("nanoseconds")
 	}
 
 	return nil
