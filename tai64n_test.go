@@ -13,13 +13,13 @@ func TestNowBase(t *testing.T) {
 	var n time.Time
 
 	n = time.Date(2016, time.May, 1, 0, 0, 0, 0, time.UTC)
-	assert.Equal(t, TAI64OriginalBase+36, nowBase(n))
+	assert.Equal(t, int64(TAI64OriginalBase+36), nowBase(n))
 
 	n = time.Date(2014, time.May, 1, 0, 0, 0, 0, time.UTC)
-	assert.Equal(t, TAI64OriginalBase+35, nowBase(n))
+	assert.Equal(t, int64(TAI64OriginalBase+35), nowBase(n))
 
 	n = time.Date(2011, time.May, 1, 0, 0, 0, 0, time.UTC)
-	assert.Equal(t, TAI64OriginalBase+34, nowBase(n))
+	assert.Equal(t, int64(TAI64OriginalBase+34), nowBase(n))
 }
 
 func TestNow(t *testing.T) {

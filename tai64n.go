@@ -40,8 +40,8 @@ type TimeComparison int
 
 const (
 	Before TimeComparison = 0
-	Equal                 = iota
-	After                 = iota
+	Equal  TimeComparison = iota
+	After  TimeComparison = iota
 )
 
 // Return the current moment
