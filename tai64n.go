@@ -12,10 +12,8 @@ import (
 const TAI64OriginalBase = 4611686018427387904
 
 var (
-	nextLS       = time.Date(2015, time.July, 1, 0, 0, 0, 0, time.UTC)
-	nextLSOffset = 36
-	curLS        = time.Date(2012, time.July, 1, 0, 0, 0, 0, time.UTC)
-	curLSOffset  = 35
+	curLS       = time.Date(2015, time.July, 1, 0, 0, 0, 0, time.UTC)
+	curLSOffset = 36
 )
 
 func nowBase(now time.Time) int64 {
@@ -26,8 +24,6 @@ func nowBase(now time.Time) int64 {
 	// time region before checking the complete leap second table.
 
 	switch {
-	case sec >= nextLS.Unix():
-		return int64(TAI64OriginalBase + nextLSOffset)
 	case sec >= curLS.Unix():
 		return int64(TAI64OriginalBase + curLSOffset)
 	default:
