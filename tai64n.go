@@ -172,3 +172,8 @@ func (tai *TAI64N) Add(dur time.Duration) *TAI64N {
 
 	return val
 }
+
+// Return a duration as the difference between the 2 times
+func (tai *TAI64N) Sub(other *TAI64N) time.Duration {
+	return tai.Time().Sub(other.Time())
+}
