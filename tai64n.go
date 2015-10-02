@@ -35,9 +35,9 @@ func nowBase(now time.Time) int64 {
 type TimeComparison int
 
 const (
-	Before TimeComparison = 0
-	Equal  TimeComparison = iota
-	After  TimeComparison = iota
+	Before TimeComparison = -1
+	Equal  TimeComparison = 0
+	After  TimeComparison = 1
 )
 
 // Return the current moment
