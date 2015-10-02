@@ -108,6 +108,28 @@ func TestAdd(t *testing.T) {
 	assert.Equal(t, m1.Seconds+1, m2.Seconds)
 }
 
+func TestAddNegative(t *testing.T) {
+	m1 := Now()
+
+	m1.Nanoseconds = 0
+
+	m2 := m1.Add(-1)
+
+	assert.Equal(t, m1.Seconds-1, m2.Seconds)
+	assert.Equal(t, uint32(1e9-1), m2.Nanoseconds)
+}
+
+func TestAddAtBoundary(t *testing.T) {
+	m1 := Now()
+
+	m1.Nanoseconds = 1e9 - 1
+
+	m2 := m1.Add(1)
+
+	assert.Equal(t, m1.Seconds+1, m2.Seconds)
+	assert.Equal(t, uint32(0), m2.Nanoseconds)
+}
+
 func TestDate(t *testing.T) {
 	s := time.Date(2014, time.May, 1, 2, 3, 4, 5, time.UTC)
 	n := FromTime(s)

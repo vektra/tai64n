@@ -156,21 +156,22 @@ func (tai *TAI64N) Compare(other *TAI64N) TimeComparison {
 // Generate a new moment by adding a duration
 func (tai *TAI64N) Add(dur time.Duration) *TAI64N {
 	var (
-		secs  = uint64(dur / time.Second)
-		nsecs = uint32(dur % time.Second)
+		secs  = int64(tai.Seconds) + int64(dur/time.Second)
+		nsecs = int32(tai.Nanoseconds) + int32(dur%time.Second)
 	)
 
-	val := &TAI64N{
-		Seconds:     tai.Seconds + secs,
-		Nanoseconds: tai.Nanoseconds + nsecs,
+	if nsecs >= 1e9 {
+		secs++
+		nsecs -= 1e9
+	} else if nsecs < 0 {
+		secs--
+		nsecs += 1e9
 	}
 
-	if val.Nanoseconds > uint32(time.Second) {
-		val.Seconds++
-		val.Nanoseconds -= uint32(time.Second)
+	return &TAI64N{
+		Seconds:     uint64(secs),
+		Nanoseconds: uint32(nsecs),
 	}
-
-	return val
 }
 
 // Return a duration as the difference between the 2 times
