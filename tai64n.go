@@ -9,11 +9,11 @@ import (
 
 // The number of seconds to offset the UNIX epoch to find the current
 // TAI time.
-const TAI64OriginalBase = 4611686018427387904
+const TAI64OriginalBase = uint64(4611686018427387904)
 
 var (
 	curLS       = time.Date(2015, time.July, 1, 0, 0, 0, 0, time.UTC)
-	curLSOffset = 36
+	curLSOffset = uint64(36)
 )
 
 func nowBase(now time.Time) int64 {

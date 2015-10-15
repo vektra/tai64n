@@ -56,7 +56,7 @@ func init() {
 
 // Return the number of leap seconds that occur previous to the given
 // time.
-func LeapSecondsInvolved(t time.Time) int {
+func LeapSecondsInvolved(t time.Time) uint64 {
 	// performance bias: typically times will be in the recent history,
 	// because, well, computers. So check from most recent leap second
 	// backwards.
@@ -64,7 +64,7 @@ func LeapSecondsInvolved(t time.Time) int {
 	for i := len(AllLeapSeconds) - 1; i >= 0; i-- {
 		ls := AllLeapSeconds[i]
 		if t.Unix() >= ls.Threshold.Unix() {
-			return ls.Offset
+			return uint64(ls.Offset)
 		}
 	}
 
