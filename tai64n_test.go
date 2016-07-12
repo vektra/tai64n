@@ -183,9 +183,3 @@ func TestString(t *testing.T) {
 
 	assert.Equal(t, n.String(), n.Time().Format(time.RFC3339Nano))
 }
-
-func TestIsZero(t *testing.T) {
-	if !FromTime(time.Time{}).IsZero() {
-		t.Fatalf("unable to create tai64n for zero time instant")
-	}
-}
