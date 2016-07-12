@@ -65,6 +65,11 @@ func (tai *TAI64N) Time() time.Time {
 	return t.Add(-time.Duration(LeapSecondsInvolved(t)) * time.Second)
 }
 
+// Returns `true` if TAI64N represents the zero time instant
+func (t *TAI64N) IsZero() bool {
+	return t.Time().IsZero()
+}
+
 // Return the value in it's canonical binary format
 func (tai *TAI64N) WriteStorage(buf []byte) {
 	binary.BigEndian.PutUint64(buf[:], tai.Seconds)
