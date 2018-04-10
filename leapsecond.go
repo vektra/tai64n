@@ -36,6 +36,7 @@ var AllLeapSeconds = []*LeapSecond{
 	&LeapSecond{time.Date(2009, time.January, 1, 0, 0, 0, 0, time.UTC), 34},
 	&LeapSecond{time.Date(2012, time.July, 1, 0, 0, 0, 0, time.UTC), 35},
 	&LeapSecond{time.Date(2015, time.July, 1, 0, 0, 0, 0, time.UTC), 36},
+	&LeapSecond{time.Date(2017, time.January, 1, 0, 0, 0, 0, time.UTC), 37},
 }
 
 type LeapMoment struct {
